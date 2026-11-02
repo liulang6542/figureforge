@@ -1,4 +1,4 @@
-name: Deploy gallery to GitHub Pages
+name: Deploy 超级AI绘图 to GitHub Pages
 
 on:
   push:
@@ -25,13 +25,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Verify FigureForge workflow lock
-        run: node scripts/check-forge-workflow-lock.mjs || node scripts/check-pdf-release-exception-20261028.mjs || node scripts/check-nonelinear-source-release-20261031.mjs || node scripts/check-infistar-step4-release-20261031.mjs || node scripts/check-nonelinear-step4-stream-release-20261031.mjs || node scripts/check-retrieval-boot-release-20261031.mjs
-      - name: Verify retrieval initialization regression tests
-        run: node --test forge/test-retrieval-boot.mjs
-      - name: Verify PDF parsing regression tests
-        run: node --test forge/test-chat-api.mjs forge/test-openai-pdf.mjs nonelinear-relay/test-worker.mjs nonelinear-relay/test-references.mjs nonelinear-relay/test-source-image.mjs nonelinear-relay/test-chat-stream.mjs forge/test-infistar-reconstruction-stream.mjs nonelinear-relay/test-live-chat.mjs
-      - name: Verify editable export regression tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify workflow lock
+        run: node scripts/check-forge-workflow-lock.mjs
+      - name: Verify chat and PDF parsing
+        run: >-
+          node --test
+          forge/test-chat-api.mjs
+          forge/test-openai-pdf.mjs
+          forge/test-infistar-reconstruction-stream.mjs
+          nonelinear-relay/test-worker.mjs
+          nonelinear-relay/test-references.mjs
+          nonelinear-relay/test-source-image.mjs
+          nonelinear-relay/test-chat-stream.mjs
+      - name: Verify editable export
         run: node forge/test-editable-export.mjs
       - name: Setup Pages
         uses: actions/configure-pages@v5
