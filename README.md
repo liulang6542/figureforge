@@ -112,7 +112,6 @@ python -m http.server 8123 --bind 127.0.0.1
 │  ├─ image-api.mjs        # 生图接口
 │  ├─ reconstruction-*.mjs # 位图 → 可编辑场景的重建管线
 │  ├─ editable-*.mjs       # 场景 → SVG / PPTX / VSDX / draw.io
-│  ├─ data/                # 检索索引与嵌入文件
 │  └─ test-*.mjs / *.cjs   # 各环节的自动化测试
 ├─ data/figures.json       # 顶会主图数据集（3,449 条元数据）
 ├─ images/                 # 数据集配图，按会议分目录
@@ -122,7 +121,7 @@ python -m http.server 8123 --bind 127.0.0.1
 
 ## 关于内置的顶会主图数据集
 
-仓库里保留了 2023–2026 年六大会议的主图数据集（3,449 条，NeurIPS 965 / ICML 746 / ICLR 745 / ACL 384 / CVPR 308 / AAAI 301），标注了会议、年份、论文、作者和视觉模式（teaser、architecture、conceptual、pipeline、framework、taxonomy 等），以及 CLIP 与 BM25 索引文件。
+仓库里保留了 2023–2026 年六大会议的主图数据集（3,449 条，NeurIPS 965 / ICML 746 / ICLR 745 / ACL 384 / CVPR 308 / AAAI 301），标注了会议、年份、论文、作者和视觉模式（teaser、architecture、conceptual、pipeline、framework、taxonomy 等）。
 
 它是版式研究的素材库，可以拿来做检索实验或训练自己的版式模型。**当前工作台不依赖它**——参考图由你自己上传，线上画廊站点已下线。
 
