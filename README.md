@@ -112,7 +112,6 @@ python -m http.server 8123 --bind 127.0.0.1
 │  ├─ image-api.mjs        # 生图接口
 │  ├─ reconstruction-*.mjs # 位图 → 可编辑场景的重建管线
 │  ├─ editable-*.mjs       # 场景 → SVG / PPTX / VSDX / draw.io
-│  ├─ models/              # 本地 CLIP 模型（旧检索链路遗留，工作台不加载）
 │  ├─ data/                # 检索索引与嵌入文件
 │  └─ test-*.mjs / *.cjs   # 各环节的自动化测试
 ├─ data/figures.json       # 顶会主图数据集（3,449 条元数据）

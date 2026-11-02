@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+- **清掉旧检索链路遗留的资产**：删除 `forge/models/`（64 MB 的 CLIP ViT-B/32 量化模型，工作台不加载）、`forge/retrieval.mjs` / `retrieval-boot.mjs` / `retrieval-worker.mjs` 与 `forge/sw.js`（画廊时代的检索与 Service Worker）。工作台与设置页都不再引用它们，仓库因此少掉一个 61.5 MB 的 onnx 文件，工作流锁基线与实际文件重新对齐（29 个受保护文件）。README 的目录结构同步更新。
+
 - **产品更名为「超级AI绘图」**：工作台顶栏、设置页标题、两个页面的 `<title>` 与浏览器标题栏、`启动.bat` 的窗口标题，以及页面文案里出现的旧名，统一改为「超级AI绘图」。同时更新导出文件里署名的元数据：PPTX 的 `Application` / 文档标题 / 作者 / 最后修改者、draw.io 的页名、VSDX 的页面名、PPTX 形状名与 draw.io 自定义 stencil 名。结构性标识一律保留原样（localStorage 的 `ff_*` 前缀、`id="figureforge"` 等），已有本机配置和旧导出件不受影响。`.github/forge-workflow-lock.json` 基线随本次改动重算（29 个受保护文件），校验脚本的描述与提示文案同步更新。
 
 - **Forge 第四步导出与画廊清理**：修复 AI 位图生成后可编辑导出未解锁的问题，并移除 3 个已确认的纯柱状图/折线图条目。
