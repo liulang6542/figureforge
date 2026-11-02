@@ -1,4 +1,4 @@
-name: Protect FigureForge workflows
+name: Protect 超级AI绘图 workflows
 
 on:
   push:

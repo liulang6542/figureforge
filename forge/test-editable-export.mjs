@@ -101,7 +101,7 @@ assert.equal((drawio.match(/shape=stencil\(/g) || []).length, 5, 'cube faces and
 const stencils=[...drawio.matchAll(/shape=stencil\(([^)]+)\)/g)].map(match =>
   decodeURIComponent(inflateRawSync(Buffer.from(match[1], 'base64')).toString('utf8')));
 assert.equal(stencils.length, 5);
-for(const shape of stencils) assert.match(shape, /<shape name="FigureForge Path"/);
+for(const shape of stencils) assert.match(shape, /<shape name="超级AI绘图 Path"/);
 for(const face of stencils.slice(0,3)) assert.match(face, /<close\/><\/path><fillstroke\/>/);
 await Promise.all([
   writeFile(resolve(output,'cube.pptx'), Buffer.from(await pptx.arrayBuffer())),

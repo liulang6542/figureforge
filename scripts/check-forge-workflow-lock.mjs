@@ -16,7 +16,7 @@ const snapshot = Object.fromEntries(protectedNames.map((name) => [`forge/${name}
 
 if (process.argv.includes('--record')) {
   writeFileSync(manifestPath, `${JSON.stringify({
-    description: 'Owner-approved FigureForge Step 3 and Step 4 workflow baseline. Changes require explicit owner consent.',
+    description: 'Owner-approved 超级AI绘图 Step 3 and Step 4 workflow baseline. Changes require explicit owner consent.',
     algorithm: 'sha256',
     files: snapshot,
   }, null, 2)}\n`);
@@ -29,8 +29,8 @@ const expected = manifest.files ?? {};
 const allNames = new Set([...Object.keys(expected), ...Object.keys(snapshot)]);
 const changed = [...allNames].filter((name) => expected[name] !== snapshot[name]);
 if (changed.length) {
-  console.error('FigureForge Step 3 / Step 4 workflow lock failed. Owner consent is required before changing the protected baseline:');
+  console.error('超级AI绘图 Step 3 / Step 4 workflow lock failed. Owner consent is required before changing the protected baseline:');
   for (const name of changed) console.error(`  ${name}: ${name in expected ? (name in snapshot ? 'modified' : 'removed') : 'added'}`);
   process.exit(1);
 }
-console.log(`FigureForge workflow lock verified (${protectedNames.length} protected files).`);
+console.log(`超级AI绘图 workflow lock verified (${protectedNames.length} protected files).`);

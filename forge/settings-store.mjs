@@ -698,7 +698,7 @@ export function exportAll() {
     if (DATA_PREFIXES.some(pre => k === pre || k.startsWith(pre))) data[k] = localStorage.getItem(k);
   }
   return JSON.stringify({
-    app: 'FigureForge', kind: 'settings', version: 1,
+    app: '超级AI绘图', kind: 'settings', version: 1,
     exportedAt: new Date().toISOString(),
     provider: providerId(), settings: data
   }, null, 2);

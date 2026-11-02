@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>设置 · FigureForge</title>
+<title>设置 · 超级AI绘图</title>
 <style>
   :root{
     --bg:#f5f5f6; --surface:#fff; --surface-2:#fafafb; --surface-3:#f2f2f4;
@@ -186,7 +186,7 @@
   <aside class="nav">
     <div class="brand">
       <span class="logo"><svg viewBox="0 0 24 24"><use href="#i-mark"/></svg></span>
-      <div><b>FigureForge</b><small data-i18n="set.brandsub"></small></div>
+      <div><b>超级AI绘图</b><small data-i18n="set.brandsub"></small></div>
     </div>
     <nav class="navlist" id="navList">
       <button class="nv on" data-sec="api" type="button">
@@ -1210,7 +1210,7 @@ document.querySelectorAll('#navList .nv').forEach(b => b.addEventListener('click
 window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'api'));
 
 /* ---------- boot ---------- */
-document.title = '设置 · FigureForge';
+document.title = '设置 · 超级AI绘图';
 MAN = await Store.loadManifest();
 /* 内置清单已移除：把旧的全局选择与作用绑定一次性转成服务商档案，否则原有 Key 会凭空消失。 */
 Store.migrateLegacy();

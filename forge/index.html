@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="./nonelinear-config.js"></script>
-<title>FigureForge · 上传参考图画自己的主图</title>
+<title>超级AI绘图 · 上传参考图画自己的主图</title>
 <style>
   /* ============================================================
      FigureForge — design tokens
@@ -566,7 +566,7 @@
     <div class="brand">
       <span class="mark"><svg viewBox="0 0 24 24"><use href="#i-mark"/></svg></span>
       <span class="brand-text">
-        <span class="brand-title">FigureForge <em>Beta</em></span>
+        <span class="brand-title">超级AI绘图 <em>Beta</em></span>
         <span class="brand-sub" data-i18n="sub"></span>
       </span>
     </div>
@@ -3908,7 +3908,7 @@ function sceneToDrawio(scene){
       const maxX=Math.max(...points.map(p=>p.x)), maxY=Math.max(...points.map(p=>p.y));
       const bw=Math.max(1,maxX-minX), bh=Math.max(1,maxY-minY);
       const pathXml=segments.map(s=>'<path><move x="'+((s.points[0].x-minX)/bw*100).toFixed(4)+'" y="'+((s.points[0].y-minY)/bh*100).toFixed(4)+'"/>'+s.points.slice(1).map(p=>'<line x="'+((p.x-minX)/bw*100).toFixed(4)+'" y="'+((p.y-minY)/bh*100).toFixed(4)+'"/>').join('')+(s.closed?'<close/>':'')+'</path>'+(s.closed&&n.fill&&n.fill!=='none'?'<fillstroke/>':'<stroke/>')).join('');
-      const stencil='<shape name="FigureForge Path" w="100" h="100" aspect="variable" strokewidth="inherit"><foreground>'+pathXml+'</foreground></shape>';
+      const stencil='<shape name="超级AI绘图 Path" w="100" h="100" aspect="variable" strokewidth="inherit"><foreground>'+pathXml+'</foreground></shape>';
       const style = 'shape=stencil('+encodeDrawioStencil(stencil)+');whiteSpace=wrap;html=1;fillColor='+drawioColor(n.fill,'none')+';strokeColor='+drawioColor(n.stroke,scene.svgSource?'none':'000000')+';strokeWidth='+(n.strokeWidth||1)+';'+(n.dash?'dashed=1;':'');
       cells.push('<mxCell id="'+id+'" value="" style="'+style+'" vertex="1" parent="1">'+
                  '<mxGeometry x="'+minX.toFixed(3)+'" y="'+minY.toFixed(3)+'" width="'+bw.toFixed(3)+'" height="'+bh.toFixed(3)+'" as="geometry"/></mxCell>');
@@ -3923,8 +3923,8 @@ function sceneToDrawio(scene){
   });
 
   return '<?xml version="1.0" encoding="UTF-8"?>\n'+
-    '<mxfile host="app.diagrams.net" agent="FigureForge" type="device">'+
-    '<diagram id="figureforge" name="FigureForge">'+
+    '<mxfile host="app.diagrams.net" agent="超级AI绘图" type="device">'+
+    '<diagram id="figureforge" name="超级AI绘图">'+
     '<mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="'+c.width+'" pageHeight="'+c.height+'" math="0" shadow="0">'+
     '<root><mxCell id="0"/><mxCell id="1" parent="0"/>'+cells.join('')+'</root>'+
     '</mxGraphModel></diagram></mxfile>';
@@ -4206,7 +4206,7 @@ function sceneToVsdxFiles(scene, font){
   const pagesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
     '<Pages xmlns="http://schemas.microsoft.com/office/visio/2012/main" '+
     'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xml:space="preserve">'+
-    '<Page ID="0" NameU="FigureForge" Name="FigureForge" ViewScale="-1" ViewCenterX="'+(c.width/2/PX_PER_IN).toFixed(4)+'" ViewCenterY="'+(c.height/2/PX_PER_IN).toFixed(4)+'">'+
+    '<Page ID="0" NameU="超级AI绘图" Name="超级AI绘图" ViewScale="-1" ViewCenterX="'+(c.width/2/PX_PER_IN).toFixed(4)+'" ViewCenterY="'+(c.height/2/PX_PER_IN).toFixed(4)+'">'+
     '<PageSheet LineStyle="0" FillStyle="0" TextStyle="0">'+
       '<Cell N="PageWidth" V="'+pageWidth+'" U="IN"/><Cell N="PageHeight" V="'+pageHeight+'" U="IN"/>'+
       '<Cell N="PageScale" V="1"/><Cell N="DrawingScale" V="1"/>'+
@@ -4224,13 +4224,13 @@ function sceneToVsdxFiles(scene, font){
 
   const appXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
     '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties">'+
-    '<Application>FigureForge</Application><Company></Company></Properties>';
+    '<Application>超级AI绘图</Application><Company></Company></Properties>';
 
   const coreXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
     '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '+
     'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
-    '<dc:title>FigureForge editable figure</dc:title><dc:creator>FigureForge</dc:creator>'+
-    '<cp:lastModifiedBy>FigureForge</cp:lastModifiedBy>'+
+    '<dc:title>超级AI绘图 · 可编辑图形</dc:title><dc:creator>超级AI绘图</dc:creator>'+
+    '<cp:lastModifiedBy>超级AI绘图</cp:lastModifiedBy>'+
     '<dcterms:created xsi:type="dcterms:W3CDTF">'+new Date().toISOString()+'</dcterms:created>'+
     '</cp:coreProperties>';
 
@@ -6453,7 +6453,7 @@ async function genOaiImage(base,model,key,content,p,refIds,layoutGuide,attempted
 }
 
 /* ---------- boot ---------- */
-document.title = 'FigureForge · 上传参考图画自己的主图';
+document.title = '超级AI绘图 · 上传参考图画自己的主图';
 GAL_I18N.apply();
 renderRefsStrip();
 renderCfgFacts();

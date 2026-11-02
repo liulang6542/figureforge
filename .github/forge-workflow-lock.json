@@ -1,5 +1,5 @@
 {
-  "description": "Owner-approved FigureForge Step 3 and Step 4 workflow baseline. Changes require explicit owner consent.",
+  "description": "Owner-approved 超级AI绘图 Step 3 and Step 4 workflow baseline. Changes require explicit owner consent.",
   "algorithm": "sha256",
   "files": {
     "forge/aspect-ratio.mjs": "8e5df7827ec52d6f554b9eeaed9d4696352b777864fbbc8fc96aadfee553b3b4",
@@ -8,13 +8,13 @@
     "forge/chat-api.mjs": "a035974a3bc08f0cc7d701c7e8d7e882f8e52d27b496504d023e99802efbe1b7",
     "forge/container-geometry.mjs": "5881e73390d562e4e563c1ecc425c2c588ab6c59c36c6dbcbe18802253138362",
     "forge/desktop-scene.mjs": "3db64b8f4c1b6d455bc72580728d1d4e23d8778a173ae26adbf6d50a52da4bb0",
-    "forge/editable-native.mjs": "5b8f529e8968ac44c32aff0c3a6a1ce499d034648884b4d8cf7447df9748070f",
+    "forge/editable-native.mjs": "f3ec577e86f8c6432d2d810d9c7378ec4cf667e99f0fc2631cf52bd99dc6b10b",
     "forge/editable-text-layout.mjs": "4baf51d3125b20e91c2cbbb286b9abb8ea479b345928c5a38728efa25c853223",
     "forge/i18n.js": "1ebac3a2c2eefbf52916da59d8a8bf471f47a0e5a7b573e31729a0b8d2ddb93a",
-    "forge/i18n_forge.js": "4b84b3f20dd27db224aeebcfc005de5aee5b858e01a9655cd7dac5e40d15be8a",
+    "forge/i18n_forge.js": "36a155508df2d70bd0a3c4a0ccc3eb9efb808c3734ff70dc84c5860c9e516797",
     "forge/image-api.mjs": "471ef776cc1492932646b380d05093a95f71fc1985db02eb2145a9a1746964d2",
     "forge/image-routes.mjs": "8724ef2c278d5dfa5975126c7374f013687f9c3fbd72a000ca9af027c6c44546",
-    "forge/index.html": "37a266c3a371744d4bd7ff5cd0dd4edf094287c8934e991ab847b1072bf2274a",
+    "forge/index.html": "ef56843588c282bd4301b41aced90751ca9b54d2ea1213a084a8e6f85b2943dd",
     "forge/infistar-audit.mjs": "145679bef9bf4251261e03a9eeb7868c1f83d3b5e57f2642c7767f12dee69f8d",
     "forge/infistar-reconstruction-stream.mjs": "0f2a4cbb8db82ff9a883f3f5a0b131fde7d6df12a251257507c6541236d2e8c5",
     "forge/nonelinear-config.js": "14dc2049e85f22de0da5a1f412d74db26fdc5a9fba3cdc85131e51cc743d747d",
@@ -27,8 +27,8 @@
     "forge/reconstruction-retry.mjs": "8616430117a36b4c0f51af3e295e660797db9b2a7bc527f47ca66a2d42c505ab",
     "forge/reconstruction-session.mjs": "2bb1ce1142f13e192b49a7cc3fb7296ea309cef6cc3507996c13be5f8a3f1a85",
     "forge/repair-queue.mjs": "fd168a3c77c32706a20ecbaa6b65fc0f53da7ddb0ad1c8316980da8dddef574b",
-    "forge/settings-store.mjs": "6c13e28bcb132c2eefc2fd3cf4c2b7c02ce851f7d48fa1dab0aacc3e1ee40a15",
-    "forge/settings.html": "604393b918cef5eae4f1be2cb54a64f341d95ee6ad2576c7efb8929bd5d4d566",
+    "forge/settings-store.mjs": "a3987bcab5ebd426f7cbbf7f0647203ef1cb1bab6ff310f5f2d899f13c56819c",
+    "forge/settings.html": "6c53d06fe1a745409d3a963aafcefd5e7daeb147f6cd7c4c9407843042b57e9f",
     "forge/source-fidelity.mjs": "58abadd0e0c2dc845419b7b211897728de99370e4a772132f6a743ab36896cb1",
     "forge/text-calibration.mjs": "94ae769599820967cb7aafdfcd8a75639fa28c65ff32631ad52670ebd594e0bf"
   }

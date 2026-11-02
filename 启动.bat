@@ -1,5 +1,5 @@
 @echo off
-title FigureForge - 本地服务
+title 超级AI绘图 - 本地服务
 cd /d "%~dp0"
 
 set PORT=8123
@@ -15,7 +15,7 @@ if not exist "%PY%" (
 )
 
 echo.
-echo   FigureForge 本地服务
+echo   超级AI绘图 本地服务
 echo   --------------------------------------------------
 echo   工作台 : http://127.0.0.1:%PORT%/forge/
 echo   设置页 : http://127.0.0.1:%PORT%/forge/settings.html

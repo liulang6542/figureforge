@@ -210,7 +210,7 @@ const dataUri = uri => {
 };
 
 function shapeXml(n,id,unit,media){
-  const nv=`<p:nvSpPr><p:cNvPr id="${id}" name="FigureForge ${esc(n.type)} ${id}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>`;
+  const nv=`<p:nvSpPr><p:cNvPr id="${id}" name="超级AI绘图 ${esc(n.type)} ${id}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>`;
   if(n.type==='image'){
     const part=dataUri(n.href);
     if(!part) throw new Error('PPTX image crop is not an embedded data URI');
@@ -218,7 +218,7 @@ function shapeXml(n,id,unit,media){
     media.push({...part,rid,filename});
     const x=Math.round(num(n.x)*unit), y=Math.round(num(n.y)*unit), w=Math.max(1,Math.round(num(n.w)*unit)), h=Math.max(1,Math.round(num(n.h)*unit));
     const rotation=num(n.rotation)?` rot="${Math.round(num(n.rotation)*60000)}"`:'';
-    return `<p:pic><p:nvPicPr><p:cNvPr id="${id}" name="FigureForge crop ${id}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm${rotation}><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>`;
+    return `<p:pic><p:nvPicPr><p:cNvPr id="${id}" name="超级AI绘图 crop ${id}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="${rid}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm${rotation}><a:off x="${x}" y="${y}"/><a:ext cx="${w}" cy="${h}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>`;
   }
   let x=num(n.x), y=num(n.y), w=num(n.w), h=num(n.h), geometry='';
   if(['path','polyline','line'].includes(n.type)){
