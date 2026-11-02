@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设置 · FigureForge</title>
+<style>
+  :root{
+    --bg:#f5f5f6; --surface:#fff; --surface-2:#fafafb; --surface-3:#f2f2f4;
+    --line:#e9e9ec; --line-2:#dcdce0;
+    --ink:#18181b; --ink-2:#3f3f46; --muted:#71717a; --faint:#a1a1aa;
+    --accent:#4f46e5; --accent-2:#4338ca; --accent-soft:#eef2ff; --accent-line:#c7d2fe;
+    --ok:#15803d; --ok-soft:#f0fdf4; --ok-line:#bbf7d0;
+    --warn:#b45309; --warn-soft:#fffbeb; --warn-line:#fde68a;
+    --err:#b91c1c; --err-soft:#fef2f2; --err-line:#fecaca;
+    --r-sm:8px; --r:10px; --r-md:12px; --r-lg:14px;
+    --sh-1:0 1px 2px rgba(24,24,27,.045);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13.5px;line-height:1.55}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font:inherit;cursor:pointer;border-radius:var(--r-sm);border:1px solid transparent;
+         transition:background .18s,border-color .18s,color .18s,box-shadow .18s}
+  button:focus-visible,input:focus-visible,select:focus-visible,.nv:focus-visible{
+    outline:2px solid var(--accent-line);outline-offset:1px}
+  [hidden]{display:none !important}
+
+  .shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+
+  /* ---------- left nav ---------- */
+  .nav{background:var(--surface);border-right:1px solid var(--line);padding:18px 14px 16px;
+       display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:10px;padding:2px 4px 4px}
+  .logo{width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;display:grid;
+        place-items:center;flex:0 0 auto}
+  .logo svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;
+            stroke-linecap:round;stroke-linejoin:round}
+  .brand b{display:block;font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+  .brand small{display:block;font-size:10.5px;color:var(--faint);font-weight:600;letter-spacing:.02em}
+  .navlist{display:flex;flex-direction:column;gap:2px}
+  .nv{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;
+      background:transparent;color:var(--ink-2);font-size:12.5px;font-weight:600;border-radius:var(--r-sm)}
+  .nv svg{width:15px;height:15px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.8;
+          stroke-linecap:round;stroke-linejoin:round;color:var(--faint)}
+  .nv:hover{background:var(--surface-3);color:var(--ink)}
+  .nv.on{background:var(--accent-soft);color:var(--accent)}
+  .nv.on svg{color:var(--accent)}
+  .navfoot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);
+        padding:8px 10px;border-radius:var(--r-sm);border:1px solid var(--line-2);background:var(--surface)}
+  .back:hover{color:var(--accent);border-color:var(--accent-line);text-decoration:none}
+
+  /* ---------- main ---------- */
+  main{padding:26px 30px 60px;max-width:1000px}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+  .top h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.015em}
+  .top p{margin:4px 0 0;font-size:12.5px;color:var(--muted);max-width:62ch}
+  .hdr{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+  .chip{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--surface-3);
+        color:var(--faint);border:1px solid var(--line);transition:background .2s,color .2s,border-color .2s}
+  .chip[data-state="saved"]{background:var(--ok-soft);color:var(--ok);border-color:var(--ok-line)}
+
+  .pane{display:none;flex-direction:column;gap:14px}
+  .pane.on{display:flex}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+        padding:17px 18px;box-shadow:var(--sh-1)}
+  .card h2{margin:0 0 4px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+  .card h2 svg{width:14px;height:14px;color:var(--faint);stroke:currentColor;fill:none;stroke-width:1.8;
+               stroke-linecap:round;stroke-linejoin:round}
+  .card h2 small{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--faint);
+                 background:var(--surface-3);border-radius:5px;padding:1px 6px}
+  .lead{margin:0 0 14px;font-size:12px;color:var(--muted);max-width:70ch}
+
+  .row{display:grid;grid-template-columns:132px minmax(0,1fr) auto;align-items:center;gap:10px;
+       padding:7px 0;border-top:1px dashed var(--line)}
+  .row:first-of-type{border-top:0}
+  .lab{font-size:12px;font-weight:650;color:var(--ink-2)}
+  .note{grid-column:1 / -1;margin:2px 0 0;font-size:11.5px;color:var(--muted);line-height:1.55}
+  .note.warn{color:var(--warn)}
+  .note.err{color:var(--err)}
+  .note.okk{color:var(--ok)}
+  .note.tiny{font-size:11px;color:var(--faint)}
+  .tag{font-size:10.5px;font-weight:650;color:var(--faint);white-space:nowrap;justify-self:end;
+       background:var(--surface-3);border-radius:5px;padding:2px 7px}
+
+  input[type=text],input[type=password],select{
+    width:100%;min-width:0;font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface);
+    border:1px solid var(--line-2);border-radius:var(--r-sm);padding:8px 10px;transition:border-color .18s,box-shadow .18s}
+  input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--faint) 50%),
+         linear-gradient(135deg,var(--faint) 50%,transparent 50%);
+         background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px,5px 5px;
+         background-repeat:no-repeat;padding-right:28px}
+
+  .btn{background:var(--surface);color:var(--ink-2);border:1px solid var(--line-2);padding:7px 12px;
+       font-size:12px;font-weight:650;white-space:nowrap}
+  .btn:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft)}
+  .btn.solid{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.solid:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+  .btn.danger{color:var(--err);border-color:var(--err-line)}
+  .btn.danger:hover{background:var(--err-soft);color:var(--err);border-color:var(--err-line)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .chk{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink-2);
+       white-space:nowrap;cursor:pointer}
+  .chk input{width:14px;height:14px;accent-color:var(--accent)}
+
+  .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 14px;margin:10px 0 0;font-size:12px}
+  .kv dt{color:var(--faint);white-space:nowrap}
+  .kv dd{margin:0;color:var(--ink-2);font-weight:600;overflow-wrap:anywhere}
+  .kv .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  .kv .dot.ok{background:var(--ok)} .kv .dot.warn{background:var(--warn)}
+
+  .test{display:flex;align-items:center;gap:11px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
+        flex-wrap:wrap}
+  .verdict{font-size:12px;font-weight:600;color:var(--muted)}
+  .verdict.okk{color:var(--ok)} .verdict.err{color:var(--err)} .verdict.warn{color:var(--warn)}
+
+  .group{border:1px solid var(--line);border-radius:var(--r-md);padding:12px 13px;margin-top:11px}
+  .group:first-of-type{margin-top:0}
+  .group h3{margin:0 0 2px;font-size:12px;font-weight:700;color:var(--ink-2)}
+  .group p.gnote{margin:0;font-size:11px;color:var(--faint)}
+
+  /* per-role provider block inside a model group */
+  .rolebar{margin:9px 0 3px;padding:1px 11px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+           background:var(--surface-2)}
+  .rolebar .row{padding:6px 0}
+  .badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;justify-self:end;white-space:nowrap;
+         background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+  .badge.flat{background:var(--surface-3);color:var(--faint);border-color:var(--line)}
+  .rolebar .verdict{font-size:11.5px}
+  .rolebar .test{margin-top:6px;padding-top:8px}
+
+  /* provider profile card */
+  .prof .phead{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .prof .phead input[type=text]{flex:1 1 auto;font-weight:650}
+  .prof .ptag{font-size:10.5px;font-weight:650;color:var(--faint);white-space:nowrap;justify-self:end;
+              background:var(--surface-3);border-radius:5px;padding:2px 7px}
+  .prof .test{margin-top:8px;padding-top:9px}
+  .prof .verdict{font-size:11.5px}
+
+  /* 服务商列表：收起只留名称，展开才是完整配置 */
+  .plist{display:flex;flex-direction:column;gap:8px}
+  .group.prof{padding:0}
+  .group.prof .prow{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer}
+  .group.prof .prow:hover{background:var(--surface-2)}
+  .prof .caret{color:var(--faint);font-size:9px;line-height:1;flex:none;
+               transition:transform .16s var(--ease)}
+  .prof[data-open="1"] .caret{transform:rotate(90deg)}
+  .prof .pname{flex:1 1 auto;font-weight:650;font-size:12.5px;color:var(--ink);
+               overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .prof .pdot{width:7px;height:7px;border-radius:50%;background:var(--warn);flex:none}
+  .prof .pdot.ok{background:var(--ok)}
+  .prof .pbody{padding:10px 12px 12px;border-top:1px solid var(--line)}
+  .prof .ptag:empty{visibility:hidden}
+  .prof .pbody .verdict{font-size:11.5px}
+  .prof textarea{display:block;width:100%;margin:6px 0 2px;padding:8px 9px;resize:vertical;
+                 font:12px/1.6 var(--font);color:var(--ink);background:var(--surface-2);
+                 border:1px solid var(--line);border-radius:var(--r-sm)}
+
+  .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+  .seg{display:inline-flex;background:var(--surface-3);border-radius:var(--r-sm);padding:2px;gap:2px;
+       justify-self:start;width:fit-content}
+  .seg button{background:transparent;border:0;padding:6px 11px;font-size:11.5px;font-weight:650;color:var(--muted);
+              border-radius:6px}
+  .seg button.on{background:var(--surface);color:var(--accent);box-shadow:var(--sh-1)}
+
+  .foot{margin-top:22px;font-size:11px;color:var(--faint)}
+
+  @media(max-width:820px){
+    .shell{grid-template-columns:1fr}
+    .nav{position:static;height:auto;flex-direction:column;border-right:0;border-bottom:1px solid var(--line)}
+    .navlist{flex-direction:row;flex-wrap:wrap}
+    .navfoot{margin-top:0}
+    main{padding:18px 14px 48px}
+    .row{grid-template-columns:1fr;gap:6px}
+    .row .btn,.row .chk{justify-self:start}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="nav">
+    <div class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24"><use href="#i-mark"/></svg></span>
+      <div><b>FigureForge</b><small data-i18n="set.brandsub"></small></div>
+    </div>
+    <nav class="navlist" id="navList">
+      <button class="nv on" data-sec="api" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12.6 10A6 6 0 1 0 7 18c2.6 0 4.8-1.7 5.6-4H17v4h4v-4h2v-4H12.6ZM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
+        <span data-i18n="set.nav.api"></span></button>
+      <button class="nv" data-sec="models" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3ZM5 9.6l6 3.3v6.9l-6-3.3V9.6Zm8 10.2v-6.9l6-3.3v6.9l-6 3.3Z"/></svg>
+        <span data-i18n="set.nav.models"></span></button>
+      <button class="nv" data-sec="general" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.2v2.1M12 18.7v2.1M4.8 4.8l1.5 1.5M17.7 17.7l1.5 1.5M3.2 12h2.1M18.7 12h2.1M4.8 19.2l1.5-1.5M17.7 6.3l1.5-1.5"/></svg>
+        <span data-i18n="set.nav.general"></span></button>
+      <button class="nv" data-sec="data" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 2C7.6 2 4 3.8 4 6v12c0 2.2 3.6 4 8 4s8-1.8 8-4V6c0-2.2-3.6-4-8-4Zm0 18c-3.9 0-6-1.5-6-2v-2.2c1.5.8 3.6 1.2 6 1.2s4.5-.4 6-1.2V18c0 .5-2.1 2-6 2Zm0-5c-3.9 0-6-1.5-6-2v-2.2c1.5.8 3.6 1.2 6 1.2s4.5-.4 6-1.2V13c0 .5-2.1 2-6 2Zm0-5C8.1 10 6 8.5 6 8s2.1-2 6-2 6 1.5 6 2-2.1 2-6 2Z"/></svg>
+        <span data-i18n="set.nav.data"></span></button>
+    </nav>
+    <div class="navfoot">
+      <a class="back" href="./index.html"><span aria-hidden="true">←</span><span data-i18n="set.back"></span></a>
+    </div>
+  </aside>
+
+  <main>
+    <header class="top">
+      <div>
+        <h1 id="secTitle"></h1>
+        <p id="secSub"></p>
+      </div>
+      <div class="hdr">
+        <span class="chip" id="saveChip" data-state="idle"></span>
+      </div>
+    </header>
+
+    <!-- ============ 1 · 服务商 ============ -->
+    <section class="pane on" id="sec-api">
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><path d="M12.6 10A6 6 0 1 0 7 18c2.6 0 4.8-1.7 5.6-4H17v4h4v-4h2v-4H12.6ZM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
+          <span data-i18n="set.api.t"></span></h2>
+        <p class="lead" data-i18n="set.api.lead"></p>
+        <div id="providerList" class="plist"></div>
+        <div class="actions">
+          <button class="btn solid" id="addProviderBtn" type="button" data-i18n="set.profile.add"></button>
+          <span class="note tiny" id="providerOut"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z"/></svg>
+          <span data-i18n="set.current"></span></h2>
+        <dl class="kv" id="overview"></dl>
+      </div>
+    </section>
+
+    <!-- ============ 2 · 模型 ============ -->
+    <section class="pane" id="sec-models">
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3ZM5 9.6l6 3.3v6.9l-6-3.3V9.6Zm8 10.2v-6.9l6-3.3v6.9l-6 3.3Z"/></svg>
+          <span data-i18n="set.models.t"></span>
+          <small data-i18n="set.models.badge"></small></h2>
+        <p class="lead" data-i18n="set.models.lead"></p>
+
+        <div class="group">
+          <h3 data-i18n="set.grp.parse"></h3>
+          <p class="gnote" data-i18n="set.grp.parse.note"></p>
+          <div class="rolebar" data-role="parse"></div>
+          <div class="row">
+            <span class="lab" data-i18n="parsemodel"></span>
+            <select id="parseModel" data-rolemodel="parse"></select>
+            <span></span>
+          </div>
+          <p class="note tiny" id="parseModelWarn" hidden></p>
+          <div class="row">
+            <span class="lab" data-i18n="reason.parse"></span>
+            <select id="parseEffort"></select>
+            <span></span>
+          </div>
+          <p class="note" data-i18n="reason.parseHint"></p>
+        </div>
+
+        <div class="group">
+          <h3 data-i18n="set.grp.visual"></h3>
+          <p class="gnote" data-i18n="set.grp.visual.note"></p>
+          <div class="rolebar" data-role="analyze"></div>
+          <div class="row">
+            <span class="lab" data-i18n="set.model.visual"></span>
+            <select id="analyzeModel" data-rolemodel="analyze"></select>
+            <span></span>
+          </div>
+          <div class="row">
+            <span class="lab" data-i18n="reason.visual"></span>
+            <select id="visualEffort"></select>
+            <span></span>
+          </div>
+          <p class="note" data-i18n="reason.visualHint"></p>
+        </div>
+
+        <div class="group">
+          <h3 data-i18n="set.grp.gen"></h3>
+          <p class="gnote" data-i18n="set.grp.gen.note"></p>
+          <div class="rolebar" data-role="gen"></div>
+          <div class="row">
+            <span class="lab" data-i18n="set.model.gen"></span>
+            <select id="genModel" data-rolemodel="gen"></select>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3 data-i18n="set.grp.image"></h3>
+          <p class="gnote" data-i18n="set.grp.image.note"></p>
+          <div class="rolebar" data-role="image"></div>
+          <div class="row">
+            <span class="lab" data-i18n="set.model.image"></span>
+            <select id="imageModelSel" data-rolemodel="image"></select>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="group">
+          <h3 data-i18n="set.grp.recon"></h3>
+          <p class="gnote" data-i18n="set.grp.recon.note"></p>
+          <div class="rolebar" data-role="recon"></div>
+          <div class="row">
+            <span class="lab" data-i18n="set.model.recon"></span>
+            <select id="reconModel" data-rolemodel="recon"></select>
+            <span></span>
+          </div>
+          <div class="row">
+            <span class="lab" data-i18n="reason.recon"></span>
+            <select id="reconEffort"></select>
+            <span></span>
+          </div>
+          <p class="note" data-i18n="reason.reconNote"></p>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="liveBtn" type="button" data-i18n="set.live"></button>
+          <span class="note tiny" id="liveOut"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3 · 通用 ============ -->
+    <section class="pane" id="sec-general">
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.2v2.1M12 18.7v2.1M4.8 4.8l1.5 1.5M17.7 17.7l1.5 1.5M3.2 12h2.1M18.7 12h2.1M4.8 19.2l1.5-1.5M17.7 6.3l1.5-1.5"/></svg>
+          <span data-i18n="set.defaults"></span></h2>
+        <p class="lead" data-i18n="set.general.lead"></p>
+
+        <div class="row">
+          <span class="lab" data-i18n="target.which"></span>
+          <select id="targetSel">
+            <option value="overview" data-i18n="target.overview"></option>
+            <option value="architecture" data-i18n="target.architecture"></option>
+            <option value="pipeline" data-i18n="target.pipeline"></option>
+            <option value="results" data-i18n="target.results"></option>
+            <option value="custom" data-i18n="target.custom"></option>
+          </select>
+          <span></span>
+        </div>
+        <div class="row">
+          <span class="lab" data-i18n="target.desc"></span>
+          <input type="text" id="targetDesc" data-i18n-ph="target.descPh">
+          <span></span>
+        </div>
+        <p class="note" data-i18n="set.target.note"></p>
+
+        <div class="row">
+          <span class="lab" data-i18n="set.mode"></span>
+          <div class="seg" id="modeSeg">
+            <button type="button" data-mode="svg" data-i18n="mode.svg"></button>
+            <button type="button" data-mode="image" data-i18n="mode.image"></button>
+          </div>
+          <span></span>
+        </div>
+        <p class="note" data-i18n="set.mode.note"></p>
+      </div>
+
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span data-i18n="set.prefs"></span></h2>
+        <p class="lead" data-i18n="set.reset.note"></p>
+        <div class="actions">
+          <button class="btn danger" id="resetPrefs" type="button" data-i18n="set.reset.btn"></button>
+          <span class="note tiny" id="resetOut"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4 · 本地数据 ============ -->
+    <section class="pane" id="sec-data">
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><path d="M12 2C7.6 2 4 3.8 4 6v12c0 2.2 3.6 4 8 4s8-1.8 8-4V6c0-2.2-3.6-4-8-4Zm0 18c-3.9 0-6-1.5-6-2v-2.2c1.5.8 3.6 1.2 6 1.2s4.5-.4 6-1.2V18c0 .5-2.1 2-6 2Zm0-5c-3.9 0-6-1.5-6-2v-2.2c1.5.8 3.6 1.2 6 1.2s4.5-.4 6-1.2V13c0 .5-2.1 2-6 2Zm0-5C8.1 10 6 8.5 6 8s2.1-2 6-2 6 1.5 6 2-2.1 2-6 2Z"/></svg>
+          <span data-i18n="set.backup"></span></h2>
+        <p class="lead" data-i18n="set.data.lead"></p>
+
+        <div class="actions">
+          <button class="btn" id="exportBtn" type="button" data-i18n="set.export"></button>
+          <button class="btn" id="importBtn" type="button" data-i18n="set.import"></button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+          <button class="btn danger" id="clearBtn" type="button" data-i18n="set.clear"></button>
+        </div>
+        <p class="note" id="dataOut"></p>
+        <p class="note warn" data-i18n="set.clear.note"></p>
+      </div>
+
+      <div class="card">
+        <h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16.5v-5"/><circle cx="12" cy="8.2" r=".9" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="set.meta"></span></h2>
+        <dl class="kv" id="meta"></dl>
+      </div>
+    </section>
+
+    <p class="foot" data-i18n="set.foot"></p>
+  </main>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M5 19V8.5L12 4l7 4.5V19"/><path d="M9.5 19v-6h5v6"/></symbol>
+</defs></svg>
+
+<script src="./i18n.js"></script>
+<script src="./i18n_forge.js?v=20261101-custom"></script>
+<script type="module">
+import * as Store from './settings-store.mjs?v=20261101-custom';
+
+const $ = s => document.querySelector(s);
+const tt = (...a) => GAL_I18N.t(...a);
+const L = (zh, en) => GAL_I18N.lang === 'zh' ? zh : en;
+const esc = s => (s + '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const SECTIONS = ['api', 'models', 'general', 'data'];
+/* "profiles" used to be its own pane; old bookmarks still land on the page that
+   now hosts that card. */
+const SEC_ALIAS = { profiles: 'api' };
+let MAN = null;
+
+/* ---------- save feedback ---------- */
+let chipTimer = 0;
+function flash(text) {
+  renderMeta();
+  const chip = $('#saveChip');
+  chip.textContent = text || tt('set.saved');
+  chip.dataset.state = 'saved';
+  clearTimeout(chipTimer);
+  chipTimer = setTimeout(() => { chip.dataset.state = 'idle'; chip.textContent = tt('set.idle'); }, 1600);
+}
+function resetChip() {
+  const chip = $('#saveChip');
+  chip.dataset.state = 'idle';
+  chip.textContent = tt('set.idle');
+}
+
+/* ---------- effort selects ---------- */
+function fillEfforts(sel, value) {
+  sel.replaceChildren();
+  const opts = [['', tt('reason.default')], ['minimal', tt('reason.minimal')], ['low', tt('reason.low')],
+    ['medium', tt('reason.mid')], ['high', tt('reason.high')], ['xhigh', tt('reason.xhigh')], ['max', tt('reason.max')]];
+  opts.forEach(([v, label]) => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = label; sel.appendChild(o);
+  });
+  sel.value = value || '';
+}
+
+/* ---------- provider ---------- */
+/* ---------- provider list ----------
+   服务商全部由用户自建，所以这一页只有一份列表：收起时只显示名称，点开才
+   露出接口、协议、通道类型、Key 与模型清单。 */
+let openProvider = null;
+const PROVIDER_GROUPS = [['chat', '文本模型', 'Text models'], ['vision', '视觉模型', 'Vision models'], ['image', '图像模型', 'Image models']];
+
+function providerState(meta, key) {
+  if (!meta.base) return { ok: false, text: L('缺接口地址', 'No endpoint') };
+  if (!key) return { ok: false, text: L('缺 API Key', 'No API key') };
+  if (!(meta.chat.length + meta.vision.length + meta.image.length))
+    return { ok: false, text: L('缺模型清单', 'No models') };
+  return { ok: true, text: L('已就绪', 'Ready') };
+}
+
+function renderProviders(msg) {
+  const host = $('#providerList');
+  if (!host) return;
+  if (msg !== undefined) $('#providerOut').textContent = msg;
+  const list = Store.profiles();
+  if (!list.length) {
+    const box = document.createElement('p');
+    box.className = 'note';
+    box.textContent = L('还没有服务商。点下方「新增服务商」，填名称、接口地址和 API Key。',
+      'No provider yet — add one below with a name, endpoint and API key.');
+    host.replaceChildren(box);
+    $('#providerOut').textContent = msg || '';
+    return;
+  }
+  const current = Store.providerId();
+  host.replaceChildren(...list.map(p => providerCard(p, p.id === current)));
+}
+
+/* A provider edit feeds the model page and the summary at once, so one helper
+   owns the refresh instead of each field calling three separate ones. */
+function refreshAfterChange() {
+  syncModels();
+  renderOverview();
+  flash();
+}
+function fillModelSelect(sel, list, current) {
+  sel.replaceChildren();
+  const seen = new Set();
+  const add = (v, label) => {
+    if (!v || seen.has(v)) return;
+    seen.add(v);
+    const o = document.createElement('option');
+    o.value = v; o.textContent = label || v; sel.appendChild(o);
+  };
+  (list || []).forEach(m => add(m));
+  if (current && !seen.has(current)) add(current, current + L('（不在内置清单）', ' (not in manifest)'));
+  if (!sel.options.length) {
+    const o = document.createElement('option');
+    o.value = ''; o.textContent = L('暂无模型清单 · 点下方拉取，或在「服务商与接口」页新建档案后拉取',
+      'No model list yet — fetch below, or add a provider profile on the Providers page');
+    sel.appendChild(o);
+  }
+  if (current) sel.value = current;
+}
+
+/* ---------- per-role routing ---------- */
+const ROLE_MODEL_SEL = {
+  parse: '#parseModel', analyze: '#analyzeModel', gen: '#genModel',
+  image: '#imageModelSel', recon: '#reconModel'
+};
+/* Candidate models for a role: the pool only offers what that role can actually
+   use — an image role must not be offered chat models. */
+function rolePool(role) {
+  const R = Store.resolveRole(role);
+  const c = R.cfg || {};
+  if (role === 'image') return c.image || [];
+  if (role === 'analyze') return c.vision || [];
+  if (role === 'recon')
+    return [...(c.vision || [])];
+  return [...(c.chat || []), ...(c.vision || [])];
+}
+
+function roleRow(role) {
+  const row = document.createElement('div');
+  row.className = 'row';
+  return row;
+}
+
+function renderRoleBar(role) {
+  const host = document.querySelector('.rolebar[data-role="' + role + '"]');
+  if (!host) return;
+  const pinned = Store.roleProvider(role);
+  host.replaceChildren();
+
+  /* provider selector — '' means "inherit the interface configured on page 1" */
+  const row = roleRow(role);
+  const lab = document.createElement('span');
+  lab.className = 'lab';
+  lab.textContent = tt('role.provider');
+  const sel = document.createElement('select');
+  sel.appendChild(new Option(
+    L('跟随全局 · ' + Store.providerLabel(Store.providerId()),
+      'Follow global · ' + Store.providerLabel(Store.providerId())), ''));
+  Store.providerIds().forEach(id => sel.appendChild(new Option(Store.providerLabel(id), id)));
+  sel.value = pinned || '';
+  sel.addEventListener('change', () => {
+    /* Switching to a different provider invalidates a model picked on the old
+       one, so the model choice is cleared for this role only. */
+    if ((sel.value || '') !== pinned) Store.setRoleModel(role, '');
+    Store.setRoleProvider(role, sel.value);
+    syncModels();
+    renderOverview();
+    flash();
+  });
+  const badge = document.createElement('span');
+  badge.className = 'badge' + (pinned ? '' : ' flat');
+  badge.textContent = pinned ? L('独立', 'Own') : L('跟随全局', 'Inherited');
+  row.append(lab, sel, badge);
+  host.appendChild(row);
+  if (!pinned) return;
+
+  if (Store.isProfileId(pinned)) {
+    /* Endpoint, protocol and key all live on the profile card — extra inputs here
+       would let one role silently drift away from the provider it points at. */
+    const row = roleRow(role);
+    const lab = document.createElement('span');
+    lab.className = 'lab';
+    lab.textContent = tt('role.profile');
+    const val = document.createElement('span');
+    val.className = 'note tiny';
+    val.style.gridColumn = 'auto';
+    val.textContent = ((Store.providerMeta(pinned) || {}).base || '–') + L(' · 接口与 Key 在「服务商」页维护', ' · endpoint and key live on the Providers page');
+    row.append(lab, val, document.createElement('span'));
+    host.appendChild(row);
+  } else {
+    /* endpoint */
+    const baseRow = roleRow(role);
+    const baseLab = document.createElement('span');
+    baseLab.className = 'lab';
+    baseLab.textContent = tt('set.endpoint');
+    const baseInp = document.createElement('input');
+    baseInp.type = 'text';
+    baseInp.spellcheck = false;
+    baseInp.placeholder = (Store.providerMeta(pinned) || {}).base || '';
+    baseInp.value = Store.roleBaseOverride(role);
+    const baseTag = document.createElement('span');
+    baseTag.className = 'tag';
+    baseTag.textContent = Store.resolveRole(role).base || '–';
+    baseInp.addEventListener('input', () => {
+      Store.setRoleBaseOverride(role, baseInp.value);
+      baseTag.textContent = Store.resolveRole(role).base || '–';
+      renderOverview();
+      flash();
+    });
+    baseRow.append(baseLab, baseInp, baseTag);
+    host.appendChild(baseRow);
+
+    /* key — blank means "reuse the global key when the provider is the same" */
+    const keyRow = roleRow(role);
+    const keyLab = document.createElement('span');
+    keyLab.className = 'lab';
+    keyLab.textContent = 'API Key';
+    const keyInp = document.createElement('input');
+    keyInp.type = 'password';
+    keyInp.autocomplete = 'off';
+    keyInp.spellcheck = false;
+    keyInp.placeholder = pinned === Store.providerId()
+      ? L('留空则用第一页的 Key', 'Empty = reuse the key from page 1')
+      : L('该服务商的 Key', 'Key for this provider');
+    keyInp.value = Store.roleKey(role);
+    keyInp.addEventListener('input', () => {
+      const cleaned = keyInp.value.replace(/\s+/g, '');
+      if (cleaned !== keyInp.value) keyInp.value = cleaned;
+      Store.setRoleKey(role, cleaned);
+      renderOverview();
+      flash();
+    });
+    const reveal = document.createElement('button');
+    reveal.type = 'button';
+    reveal.className = 'btn';
+    reveal.textContent = tt('set.reveal');
+    reveal.addEventListener('click', () => {
+      const show = keyInp.type === 'password';
+      keyInp.type = show ? 'text' : 'password';
+      reveal.textContent = show ? tt('set.hide') : tt('set.reveal');
+    });
+    keyRow.append(keyLab, keyInp, reveal);
+    host.appendChild(keyRow);
+  }
+
+  /* isolated connectivity test, using only this role's credentials */
+  const test = document.createElement('div');
+  test.className = 'test';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn';
+  btn.textContent = tt('role.test');
+  const out = document.createElement('span');
+  out.className = 'verdict';
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = tt('set.testing');
+    out.className = 'verdict';
+    out.textContent = '…';
+    const v = await Store.testConnection({ role });
+    btn.disabled = false;
+    btn.textContent = original;
+    const detail = v.model ? ' · ' + v.model : (typeof v.count === 'number' ? ' · ' + L(v.count + ' 个模型', v.count + ' models') : '');
+    out.className = 'verdict ' + (v.ok ? 'okk' : (v.code === 'auth' ? 'err' : 'warn'));
+    out.textContent = verdictLabel(v) + detail + (v.ms ? ' · ' + v.ms + ' ms' : '');
+  });
+  test.append(btn, out);
+  host.appendChild(test);
+
+  const missing = !Store.resolveRole(role).key;
+  if (missing) {
+    const note = document.createElement('p');
+    note.className = 'note warn';
+    note.textContent = L('这个作用还没有可用的 Key，生成时会直接报错。',
+      'This role has no usable key yet — requests will fail.');
+    host.appendChild(note);
+  }
+}
+
+function syncModels() {
+  Store.ROLES.forEach(role => {
+    renderRoleBar(role);
+    const sel = document.querySelector(ROLE_MODEL_SEL[role]);
+    if (sel) fillModelSelect(sel, rolePool(role), Store.roleModel(role));
+  });
+}
+document.querySelectorAll('[data-rolemodel]').forEach(sel => {
+  sel.addEventListener('change', e => {
+    Store.setRoleModel(e.target.dataset.rolemodel, e.target.value);
+    renderOverview();
+    flash();
+  });
+});
+
+function renderOverview() {
+  const p = Store.providerId(), meta = Store.providerMeta(p) || {};
+  const sm = Store.summary();
+  const keyCell = sm.keyPresent
+    ? '<span class="dot ok"></span>' + esc(sm.keyMask)
+    : '<span class="dot warn"></span>' + esc(tt('cfg.nokey'));
+  const rows = [
+    [tt('provider'), esc(Store.providerLabel(p))],
+    ['API Key', keyCell],
+    [tt('set.endpoint'), esc(sm.base || '–')],
+    [L('协议', 'Protocol'), esc((meta.proto || 'oai') === 'anthropic' ? 'Anthropic Messages' : L('OpenAI 兼容', 'OpenAI compatible'))],
+    [tt('parsemodel'), esc(sm.parseModel || '–')],
+    [L('模型清单（文/视/图）', 'Models (text/vision/image)'), esc(`${(meta.chat || []).length} / ${(meta.vision || []).length} / ${(meta.image || []).length}`)],
+  ];
+  /* Roles that were deliberately pointed elsewhere must be visible at a glance,
+     otherwise the interface card reads as if one provider served everything. */
+  Store.ROLES.forEach(role => {
+    const rs = Store.roleSummary(role);
+    if (!rs.custom) return;
+    rows.push([
+      esc(tt('role.' + role)),
+      esc(rs.label) + ' · ' + esc(rs.base || '–') + ' · ' + esc(rs.model || L('未选模型', 'no model'))
+    ]);
+  });
+  $('#overview').innerHTML = rows.map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+}
+
+/* ---------- provider profiles ----------
+   The built-in list is closed: each entry carries protocol, CORS behaviour and a
+   model catalogue that a user cannot invent for an unknown relay. A profile is a
+   user-owned entry with exactly those fields, so it can then be used anywhere a
+   built-in provider can — globally or per role. */
+function profileRow() {
+  const d = document.createElement('div');
+  d.className = 'row';
+  return d;
+}
+function profileLab(text) {
+  const s = document.createElement('span');
+  s.className = 'lab';
+  s.textContent = text;
+  return s;
+}
+function providerTag(text) {
+  const s = document.createElement('span');
+  s.className = 'ptag';
+  s.textContent = text || '';
+  /* 空标签要占住 grid 的第三列，否则按钮会被拉去填中间那一列；
+     可见性交给 .ptag:empty 处理，之后填上内容就会自己出现。 */
+  return s;
+}
+
+function providerCard(p, isCurrent) {
+  const meta = Store.providerMeta(p.id) ||
+    { label: '', base: '', proto: 'oai', flavor: 'generic', flags: {}, chat: [], vision: [], image: [] };
+  const key = Store.apiKey(p.id);
+  const state = providerState(meta, key);
+  const usage = Store.profileUsage(p.id);
+  const open = openProvider === p.id;
+
+  const card = document.createElement('div');
+  card.className = 'group prof';
+  card.dataset.open = open ? '1' : '0';
+
+  /* 收起状态只留名称与一个状态点：列表本身不该是一屏输入框。 */
+  const row = document.createElement('div');
+  row.className = 'prow';
+  const caret = document.createElement('span');
+  caret.className = 'caret';
+  caret.textContent = '▶';
+  const name = document.createElement('span');
+  name.className = 'pname';
+  name.textContent = meta.label || L('未命名服务商', 'Untitled');
+  const dot = document.createElement('span');
+  dot.className = 'pdot' + (state.ok ? ' ok' : '');
+  dot.title = state.text;
+  const flag = document.createElement('span');
+  flag.className = 'badge' + (isCurrent || usage.length ? '' : ' flat');
+  flag.textContent = isCurrent ? L('当前', 'current')
+    : usage.length ? L('已分配', 'assigned') : L('未使用', 'unused');
+  row.append(caret, dot, name, flag);
+  row.addEventListener('click', () => {
+    openProvider = open ? null : p.id;
+    renderProviders();
+  });
+  card.appendChild(row);
+  if (!open) return card;
+
+  const body = document.createElement('div');
+  body.className = 'pbody';
+  card.appendChild(body);
+
+  /* 名称 */
+  const nameRow = profileRow();
+  const nameInp = document.createElement('input');
+  nameInp.type = 'text';
+  nameInp.value = p.label || '';
+  nameInp.placeholder = L('服务商名称', 'Provider name');
+  const nameTag = providerTag('');
+  nameInp.addEventListener('input', () => {
+    const v = nameInp.value.slice(0, 60);
+    Store.updateProfile(p.id, { label: v });
+    /* 收起行显示的就是这个名字，逐字同步，否则合上后仍是旧名。 */
+    name.textContent = v.trim() || L('未命名服务商', 'Untitled');
+  });
+  /* 只在失焦时重建：替换用户正在输入的那个 input 会吃掉后面的按键。 */
+  nameInp.addEventListener('change', () => { renderProviders(); refreshAfterChange(); });
+  nameRow.append(profileLab(L('名称', 'Name')), nameInp, nameTag);
+  body.appendChild(nameRow);
+
+  /* 接口地址 */
+  const baseRow = profileRow();
+  const baseInp = document.createElement('input');
+  baseInp.type = 'text';
+  baseInp.spellcheck = false;
+  baseInp.placeholder = 'https://api.example.com/v1';
+  baseInp.value = meta.base || '';
+  const baseTag = providerTag('');
+  /* 只填到版本根：程序自己拼 /chat/completions、/models、/images/*。粘完整端点
+     会让探针变成 /chat/completions/models，网关回 401/404，看着像 Key 失效。 */
+  const ENDPOINT_TAIL = /\/(?:chat\/completions|completions|messages|responses|models|images\/(?:generations|edits))\/?$/i;
+  const stampBase = () => {
+    baseTag.textContent = baseInp.value.trim() ? L('已填写', 'set') : L('必填', 'required');
+  };
+  baseInp.addEventListener('input', () => {
+    Store.updateProfile(p.id, { base: baseInp.value });
+    stampBase();
+    stampFlavor();
+  });
+  baseInp.addEventListener('change', () => {
+    const raw = baseInp.value.trim().replace(/\/+$/, '');
+    if (ENDPOINT_TAIL.test(raw)) {
+      const fixed = raw.replace(ENDPOINT_TAIL, '');
+      baseInp.value = fixed;
+      Store.updateProfile(p.id, { base: fixed });
+      /* 不重建：这次 build 里的 input 正在失焦，换掉会连同点击一起吞掉。 */
+      $('#providerOut').textContent = L('这里只填到版本根（如 https://api.deepseek.com/v1），后面的 /chat/completions 由程序自动拼——已帮你改好。',
+        'Only the root belongs here (e.g. https://api.deepseek.com/v1) — the request path is appended automatically, so it was removed.');
+      stampBase();
+      stampFlavor();
+      refreshAfterChange();
+      return;
+    }
+    refreshAfterChange();
+  });
+  stampBase();
+  baseRow.append(profileLab(L('接口地址', 'Endpoint')), baseInp, baseTag);
+  body.appendChild(baseRow);
+
+  /* 协议 */
+  const protoRow = profileRow();
+  const protoSel = document.createElement('select');
+  [['oai', L('OpenAI 兼容', 'OpenAI compatible')], ['anthropic', 'Anthropic Messages']]
+    .forEach(([v, label]) => protoSel.appendChild(new Option(label, v)));
+  protoSel.value = meta.proto === 'anthropic' ? 'anthropic' : 'oai';
+  protoSel.addEventListener('change', () => {
+    Store.updateProfile(p.id, { proto: protoSel.value });
+    stampFlavor();
+    refreshAfterChange();
+  });
+  protoRow.append(profileLab(L('协议', 'Protocol')), protoSel, providerTag(L('鉴权头与请求体格式', 'auth header + body shape')));
+  body.appendChild(protoRow);
+
+  /* 通道类型：按接口地址自动识别，决定请求怎么发（关不关思考、PDF 走哪条路、
+     图片回 URL 还是 base64）。一般不用动，识别错了才手动指定。 */
+  const flavorRow = profileRow();
+  const flavorSel = document.createElement('select');
+  flavorSel.appendChild(new Option(L('自动识别', 'Detect automatically'), ''));
+  Store.FLAVORS.forEach(f => flavorSel.appendChild(new Option(Store.FLAVOR_LABELS[f] || f, f)));
+  flavorSel.value = Store.FLAVORS.includes(p.flavor) ? p.flavor : '';
+  const flavorTag = providerTag('');
+  const stampFlavor = () => {
+    const auto = Store.flavorOf(baseInp.value.trim(), protoSel.value);
+    const f = flavorSel.value || auto;
+    const label = Store.FLAVOR_LABELS[f] || f;
+    flavorTag.textContent = flavorSel.value ? label + L('（手动）', ' (manual)') : label;
+  };
+  flavorSel.addEventListener('change', () => {
+    Store.updateProfile(p.id, { flavor: flavorSel.value });
+    stampFlavor();
+    refreshAfterChange();
+  });
+  flavorRow.append(profileLab(L('通道类型', 'Channel')), flavorSel, flavorTag);
+  body.appendChild(flavorRow);
+  stampFlavor();
+
+  /* API Key */
+  const keyRow = profileRow();
+  const keyInp = document.createElement('input');
+  keyInp.type = 'password';
+  keyInp.autocomplete = 'off';
+  keyInp.spellcheck = false;
+  keyInp.placeholder = L('该服务商的 API Key', 'API key for this provider');
+  keyInp.value = key;
+  keyInp.addEventListener('input', () => {
+    const cleaned = keyInp.value.replace(/\s+/g, '');
+    if (cleaned !== keyInp.value) keyInp.value = cleaned;
+    Store.setApiKey(cleaned, p.id);
+    dot.className = 'pdot' + (providerState(meta, cleaned).ok ? ' ok' : '');
+  });
+  keyInp.addEventListener('change', () => { renderProviders(); refreshAfterChange(); });
+  const reveal = document.createElement('button');
+  reveal.type = 'button';
+  reveal.className = 'btn';
+  reveal.textContent = tt('set.reveal');
+  reveal.addEventListener('click', () => {
+    const show = keyInp.type === 'password';
+    keyInp.type = show ? 'text' : 'password';
+    reveal.textContent = show ? tt('set.hide') : tt('set.reveal');
+  });
+  keyRow.append(profileLab('API Key'), keyInp, reveal);
+  body.appendChild(keyRow);
+
+  /* 模型清单：没有内置清单可查，三组都能手填，也能从 /models 拉取后自动归类。 */
+  const modelsRow = profileRow();
+  const modelSummary = providerTag('');
+  const fetchBtn = document.createElement('button');
+  fetchBtn.type = 'button';
+  fetchBtn.className = 'btn';
+  fetchBtn.textContent = L('拉取模型', 'Fetch models');
+  const stampGroups = () => {
+    const m = Store.providerMeta(p.id) || { chat: [], vision: [], image: [] };
+    modelSummary.textContent = L(
+      `${m.chat.length} 文 / ${m.vision.length} 视 / ${m.image.length} 图`,
+      `${m.chat.length} text / ${m.vision.length} vision / ${m.image.length} image`);
+    return m;
+  };
+  stampGroups();
+  fetchBtn.addEventListener('click', async () => {
+    fetchBtn.disabled = true;
+    const original = fetchBtn.textContent;
+    fetchBtn.textContent = tt('set.testing');
+    const res = await Store.fetchProfileModels(p.id);
+    fetchBtn.disabled = false;
+    fetchBtn.textContent = original;
+    if (!res.ok) {
+      renderProviders(L(res.reason === 'config' ? '先填接口地址和 Key' : '拉取失败：' + res.reason + '（该接口可能不允许浏览器查询模型列表，请手填）',
+        'Fill the endpoint and key first — or this endpoint blocks listing from browsers, so type the ids in'));
+      return;
+    }
+    renderProviders(L(`已保存 ${res.list.length} 个模型`, `Saved ${res.list.length} models`));
+    refreshAfterChange();
+  });
+  modelsRow.append(profileLab(L('模型清单', 'Models')), modelSummary, fetchBtn);
+  body.appendChild(modelsRow);
+
+  for (const [g, zh, en] of PROVIDER_GROUPS) {
+    const r = profileRow();
+    const count = providerTag('');
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'btn';
+    toggle.dataset.group = g;
+    toggle.textContent = L('编辑', 'Edit');
+    const ta = document.createElement('textarea');
+    ta.dataset.group = g;
+    ta.hidden = true;
+    ta.rows = 4;
+    ta.spellcheck = false;
+    ta.placeholder = L('一行一个模型 ID', 'One model id per line');
+    const fill = () => {
+      const m = Store.providerMeta(p.id) || { chat: [], vision: [], image: [] };
+      const list = m[g] || [];
+      ta.value = list.join('\n');
+      count.textContent = L(list.length + ' 个', String(list.length));
+    };
+    const save = () => {
+      Store.setProfileModelGroup(p.id, g, ta.value.split('\n'));
+      fill();
+      stampGroups();
+      refreshAfterChange();
+    };
+    toggle.addEventListener('click', () => {
+      ta.hidden = !ta.hidden;
+      toggle.textContent = ta.hidden ? L('编辑', 'Edit') : L('完成', 'Done');
+      if (ta.hidden) save();
+      else { fill(); ta.focus(); }
+    });
+    ta.addEventListener('change', save);
+    r.append(profileLab(L(zh, en)), count, toggle);
+    body.appendChild(r);
+    body.appendChild(ta);
+    fill();
+  }
+
+  /* 只测这一条，不影响其他服务商 */
+  const test = document.createElement('div');
+  test.className = 'test';
+  const testBtn = document.createElement('button');
+  testBtn.type = 'button';
+  testBtn.className = 'btn';
+  testBtn.textContent = tt('set.test');
+  const out = document.createElement('span');
+  out.className = 'verdict';
+  testBtn.addEventListener('click', async () => {
+    testBtn.disabled = true;
+    const original = testBtn.textContent;
+    testBtn.textContent = tt('set.testing');
+    out.className = 'verdict';
+    out.textContent = '…';
+    const live = Store.providerMeta(p.id) || {};
+    const v = await Store.testConnection({
+      /* 取输入框里的实时值，不是渲染时的快照 */
+      base: baseInp.value.trim(), key: keyInp.value, proto: protoSel.value,
+      model: (live.chat || [])[0] || ''
+    });
+    testBtn.disabled = false;
+    testBtn.textContent = original;
+    const detail = v.model ? ' · ' + v.model
+      : (typeof v.count === 'number' ? ' · ' + L(v.count + ' 个模型', v.count + ' models') : '');
+    out.className = 'verdict ' + (v.ok ? 'okk' : (v.code === 'auth' ? 'err' : 'warn'));
+    out.textContent = verdictLabel(v) + detail + (v.ms ? ' · ' + v.ms + ' ms' : '')
+      + (!v.ok && (v.code === 'auth' || v.code === 'http' || v.code === 'network')
+        ? L(' · 若 Key 确认无误，注意接口地址只填到 /v1，不要带 /chat/completions',
+          ' · if the key is right, the endpoint must stop at /v1 — not /chat/completions')
+        : '');
+  });
+  test.append(testBtn, out);
+  body.appendChild(test);
+
+  /* 底部：设为当前 / 删除 */
+  const actions = document.createElement('div');
+  actions.className = 'actions';
+  if (!isCurrent) {
+    const useBtn = document.createElement('button');
+    useBtn.type = 'button';
+    useBtn.className = 'btn solid';
+    useBtn.textContent = L('设为当前', 'Use this provider');
+    useBtn.addEventListener('click', () => {
+      Store.setProvider(p.id);
+      openProvider = p.id;
+      renderProviders(L('已切换当前服务商', 'Switched the current provider'));
+      refreshAfterChange();
+    });
+    actions.appendChild(useBtn);
+  }
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'btn danger';
+  del.textContent = tt('set.profile.delete');
+  del.addEventListener('click', () => {
+    const ask = usage.length
+      ? L(`「${p.label}」正在被 ${usage.length} 处引用。删除后这些位置会回落到其他服务商，确定删除？`,
+        `"${p.label}" is referenced ${usage.length} time(s). Those roles will fall back. Delete?`)
+      : L(`删除「${p.label}」？`, `Delete "${p.label}"?`);
+    if (!confirm(ask)) return;
+    /* 正在编辑的那条可以删，但展开态不能留在一个已经不存在的 id 上。 */
+    if (openProvider === p.id) openProvider = null;
+    Store.removeProfile(p.id);
+    renderProviders(L('已删除', 'Deleted'));
+    refreshAfterChange();
+  });
+  actions.appendChild(del);
+  body.appendChild(actions);
+  return card;
+}
+
+$('#addProviderBtn').addEventListener('click', () => {
+  const id = Store.addProfile({});
+  if (!id) { renderProviders(L('服务商数量已达上限', 'Provider limit reached')); return; }
+  /* 第一条自动成为当前：否则工作台会停在「没有服务商」的状态。 */
+  if (!Store.providerId()) Store.setProvider(id);
+  openProvider = id;
+  renderProviders(L('已新增，填好接口地址和 API Key 后到「模型」页分配', 'Added — fill the endpoint and key, then assign it on the Models page'));
+  refreshAfterChange();
+  const inp = document.querySelector('#providerList .pbody input');
+  if (inp) inp.focus();
+});
+/* The store returns a code rather than a sentence so this page can render the
+   verdict in the reader's language without the store knowing about i18n. */
+function verdictLabel(v) {
+  if (v.ok) return L('连接正常', 'Connected');
+  switch (v.code) {
+    case 'nobase': return L('未填写接口地址', 'No endpoint');
+    case 'nokey': return L('未填写 API Key', 'No API key');
+    case 'auth': return L('Key 未通过鉴权（HTTP ' + v.status + '）', 'Key rejected (HTTP ' + v.status + ')');
+    case 'timeout': return L('连接超时', 'Timed out');
+    case 'network': return L('网络不可达：跨域被拦或地址填错', 'Unreachable: blocked by CORS or wrong endpoint');
+    case 'http': return L('接口返回 HTTP ' + v.status, 'HTTP ' + v.status);
+    default: return v.message || '';
+  }
+}
+/* Keep the last verdict so switching language re-renders it instead of leaving
+   a stale sentence in the previous language. */
+/* ---------- wiring: models ---------- */
+/* The selects ship empty in the markup, so seed them here: without this the
+   three effort pickers render blank and the saved tier cannot be seen or changed. */
+fillEfforts($('#parseEffort'), Store.parseEffort());
+fillEfforts($('#visualEffort'), Store.visualEffort());
+fillEfforts($('#reconEffort'), Store.reconEffort());
+$('#parseEffort').addEventListener('change', e => { Store.setParseEffort(e.target.value); flash(); });
+$('#visualEffort').addEventListener('change', e => { Store.setVisualEffort(e.target.value); flash(); });
+$('#reconEffort').addEventListener('change', e => { Store.setReconEffort(e.target.value); flash(); });
+
+/* Pull the live catalogue once per role: each role may sit behind a different
+   account, so a single global fetch would report the wrong list. */
+$('#liveBtn').addEventListener('click', async () => {
+  const btn = $('#liveBtn'), out = $('#liveOut');
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = tt('set.testing');
+  out.className = 'note tiny';
+  out.textContent = '…';
+  let roles = 0, total = 0, failed = 0;
+  for (const role of Store.ROLES) {
+    const R = Store.resolveRole(role);
+    const res = await Store.listModels({ role });
+    if (!res.ok) { failed++; continue; }
+    roles++; total += res.list.length;
+    /* Classify before filling: an image role must never be offered chat models,
+       which is what a raw /models answer mixes together. */
+    const buckets = Store.classifyModels(res.list);
+    const pool = role === 'image' ? buckets.image
+      : (role === 'analyze' || role === 'recon') ? buckets.vision
+      : buckets.chat;
+    /* A profile has no catalogue of its own, so the answer is also persisted —
+       otherwise the next reload would show an empty list again. */
+    if (Store.isProfileId(R.provider)) Store.setProfileModels(R.provider, buckets);
+    const sel = document.querySelector(ROLE_MODEL_SEL[role]);
+    if (sel) fillModelSelect(sel, [...new Set([...rolePool(role), ...pool])], Store.roleModel(role));
+  }
+  btn.disabled = false;
+  btn.textContent = original;
+  if (!roles) {
+    out.className = 'note tiny warn';
+    out.textContent = L('拉取失败（该服务商可能不允许浏览器查询模型列表）',
+      'Fetch failed (the provider may block model listing from browsers)');
+    return;
+  }
+  out.className = 'note tiny okk';
+  out.textContent = L(`已更新 ${roles} 个作用的在线模型，共 ${total} 个${failed ? `；${failed} 个作用拉取失败` : ''}`,
+    `Updated ${roles} roles, ${total} models${failed ? `; ${failed} failed` : ''}`);
+});
+
+/* ---------- wiring: general ---------- */
+function syncGeneral() {
+  $('#targetSel').value = Store.target();
+  $('#targetDesc').value = Store.targetDesc();
+  document.querySelectorAll('#modeSeg button').forEach(b => b.classList.toggle('on', b.dataset.mode === Store.genMode()));
+}
+$('#targetSel').addEventListener('change', e => { Store.setTarget(e.target.value); flash(); });
+$('#targetDesc').addEventListener('input', e => { Store.setTargetDesc(e.target.value); flash(); });
+document.querySelectorAll('#modeSeg button').forEach(b => b.addEventListener('click', () => {
+  Store.setGenMode(b.dataset.mode); syncGeneral(); flash();
+}));
+$('#resetPrefs').addEventListener('click', () => {
+  Store.setTarget('overview');
+  Store.setTargetDesc('');
+  Store.setGenMode('svg');
+  syncGeneral();
+  $('#resetOut').textContent = tt('set.resetDone');
+  setTimeout(() => { $('#resetOut').textContent = ''; }, 2200);
+});
+
+/* ---------- wiring: data ---------- */
+$('#exportBtn').addEventListener('click', () => {
+  const blob = new Blob([Store.exportAll()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'figureforge-settings-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  const out = $('#dataOut');
+  out.className = 'note okk';
+  out.textContent = L('已导出配置文件。文件里包含明文 Key，请勿分享。', 'Exported. The file contains your key in plain text — do not share it.');
+});
+$('#importBtn').addEventListener('click', () => $('#importFile').click());
+$('#importFile').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const text = await f.text();
+  const res = Store.importAll(text);
+  const out = $('#dataOut');
+  if (!res.ok) {
+    out.className = 'note err';
+    out.textContent = L('导入失败：' + res.error, 'Import failed: ' + res.error);
+  } else {
+    out.className = 'note okk';
+    out.textContent = L(`已导入 ${res.written} 项，忽略 ${res.skipped} 项。页面将重新加载。`,
+      `Imported ${res.written}, skipped ${res.skipped}. Reloading.`);
+    setTimeout(() => location.reload(), 700);
+  }
+  e.target.value = '';
+});
+$('#clearBtn').addEventListener('click', () => {
+  const out = $('#dataOut');
+  if (!confirm(L('确定清空本机保存的全部配置（含 API Key）？此操作不可撤销。',
+    'Clear every locally stored setting, including the API key? This cannot be undone.'))) return;
+  const n = Store.clearAll();
+  out.className = 'note okk';
+  out.textContent = L(`已清除 ${n} 项。页面将重新加载。`, `Cleared ${n} entries. Reloading.`);
+  setTimeout(() => location.reload(), 600);
+});
+
+function renderMeta() {
+  const rows = [
+    [L('服务商数量', 'Provider count'), String(Store.providerIds().length)],
+    [L('本地占用', 'Local storage'), fmtBytes(Store.storageBytes())],
+    [L('已配置', 'Configured'), Store.isConfigured() ? tt('set.yes') : tt('set.no')],
+  ];
+  $('#meta').innerHTML = rows.map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+}
+function fmtBytes(n) {
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  return (n / 1048576).toFixed(2) + ' MB';
+}
+
+/* ---------- shell ---------- */
+function showSection(sec) {
+  sec = SEC_ALIAS[sec] || sec;
+  if (!SECTIONS.includes(sec)) sec = 'api';
+  SECTIONS.forEach(s => $('#sec-' + s).classList.toggle('on', s === sec));
+  document.querySelectorAll('#navList .nv').forEach(b => b.classList.toggle('on', b.dataset.sec === sec));
+  /* 列表在进入本页时重建，这样「已分配」徽标能反映模型页上的改动。 */
+  if (sec === 'api') renderProviders();
+  $('#secTitle').textContent = tt('set.nav.' + sec);
+  $('#secSub').textContent = tt('set.' + sec + '.sub');
+  if (location.hash.slice(1) !== sec) history.replaceState(null, '', '#' + sec);
+}
+document.querySelectorAll('#navList .nv').forEach(b => b.addEventListener('click', () => showSection(b.dataset.sec)));
+/* Same-document hash edits (typing an anchor, an old #profiles link) do not
+   reload the page, so routing has to follow them too. */
+window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'api'));
+
+/* ---------- boot ---------- */
+document.title = '设置 · FigureForge';
+MAN = await Store.loadManifest();
+/* 内置清单已移除：把旧的全局选择与作用绑定一次性转成服务商档案，否则原有 Key 会凭空消失。 */
+Store.migrateLegacy();
+renderProviders();
+syncModels();
+renderOverview();
+syncGeneral();
+renderMeta();
+resetChip();
+showSection(location.hash.slice(1) || 'api');
+GAL_I18N.apply();
+
+/* 以浮层嵌入时，「返回工作台」应该是关掉浮层，而不是在这个框里跳转 */
+if (window.top !== window.self) {
+  const back = document.querySelector('.back');
+  if (back) back.addEventListener('click', e => {
+    e.preventDefault();
+    window.parent.postMessage({ type: 'ff-settings-back' }, location.origin);
+  });
+}
+</script>
+</body>
+</html>
